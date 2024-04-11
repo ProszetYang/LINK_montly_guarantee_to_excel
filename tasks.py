@@ -26,9 +26,8 @@ HEADER = [[
 
 @task
 def monthly_guarantee_to_excel():
-    #open_sompo()
-    #data_pdf = download_monthly_guarantee()
-    data_pdf = "output/hoshosho.pdf"
+    open_sompo()
+    data_pdf = download_monthly_guarantee()
     pdf_to_excel(data_pdf, 'output/test.xlsx')
 
 def open_sompo():
@@ -41,6 +40,7 @@ def open_sompo():
         page.locator("#memberId").fill(loginInfo["id"])
         page.locator("#memberPw").fill(loginInfo["password"])
         page.locator("#loginButton").click()
+        time.sleep(3)
         loginflag = page.get_by_label("保証書：購入明細の通り").count()
         if loginflag == 0:
             page.get_by_role("button", name="ログイン画面").click()
