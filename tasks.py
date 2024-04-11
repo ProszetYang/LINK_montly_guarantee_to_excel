@@ -4,6 +4,24 @@ from RPA.PDF import PDF
 import time
 from robocorp import vault
 from RPA.Excel.Files import Files
+import fitz
+import re
+
+HEADER = [[
+    'NO.',
+    '登録日',
+    '保証番号',
+    'プラン',
+    '年数',
+    'お客様名',
+    '保証付与商品',
+    '商品型番',
+    '商品金額',
+    '保証料金',
+    '手数料',
+    '当社ご請求金額'
+]]
+
 
 @task
 def monthly_guarantee_to_excel():
@@ -11,7 +29,6 @@ def monthly_guarantee_to_excel():
     #data_pdf = download_monthly_guarantee()
     data_pdf = "output/hoshosho.pdf"
     pdf_to_excel(data_pdf, 'output/test.xlsx')
-    time.sleep(5)
 
 def open_sompo():
 
@@ -40,6 +57,20 @@ def download_monthly_guarantee():
     return "output/" + download.suggested_filename
 
 
-def pdf_to_excel(pdf_file_path, excel_file_path):
-
-
+def pdf_to_excel(pdf_path, excel_path):
+    lib = Files()
+    lib.create_workbook(sheet_name="リスト")
+    lib.append_rows_to_worksheet(HEADER)
+    doc = fitz.open(pdf_path)
+    for page in doc:
+        tabs = page.find_tables()
+        if tabs.tables:
+            for row in tabs[1].extract():
+                if row[0].isdigit():
+                    row[0] = int(row[0])
+                    row[8] = int(re.sub(r'[^-\d]', "", row[8]))
+                    row[9] = int(re.sub(r'[^-\d]', "", row[9]))
+                    row[10] = int(re.sub(r'[^-\d]', "", row[10]))
+                    row[11] = int(re.sub(r'[^-\d]', "", row[11]))
+                    lib.append_rows_to_worksheet([row])
+    lib.save_workbook(excel_path)
