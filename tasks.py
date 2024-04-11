@@ -6,6 +6,7 @@ from robocorp import vault
 from RPA.Excel.Files import Files
 import fitz
 import re
+from datetime import datetime
 
 HEADER = [[
     'NO.',
@@ -68,6 +69,7 @@ def pdf_to_excel(pdf_path, excel_path):
             for row in tabs[1].extract():
                 if row[0].isdigit():
                     row[0] = int(row[0])
+                    row[1] = datetime.strptime(row[1], '%y/%m/%d').strftime("%Y/%m/%d")
                     row[8] = int(re.sub(r'[^-\d]', "", row[8]))
                     row[9] = int(re.sub(r'[^-\d]', "", row[9]))
                     row[10] = int(re.sub(r'[^-\d]', "", row[10]))
