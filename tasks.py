@@ -26,6 +26,10 @@ HEADER = [[
 
 @task
 def monthly_guarantee_to_excel():
+    browser.configure(
+        slowmo=300,
+        headless=True
+    )
     open_sompo()
     data_pdf = download_monthly_guarantee()
     pdf_to_excel(data_pdf, 'output/test.xlsx')
