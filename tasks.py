@@ -7,6 +7,7 @@ from RPA.Excel.Files import Files
 import fitz
 import re
 from datetime import datetime
+from datetime import timedelta
 
 HEADER = [[
     'NO.',
@@ -26,13 +27,14 @@ HEADER = [[
 
 @task
 def monthly_guarantee_to_excel():
+    resultfile = "//192.168.0.178/contents/WinActor/シナリオ/価格チェックチーム/延長保証月次請求書Excel化/作業リスト/" + str(datetime.now().strftime("%Y")) + "年" + str((datetime.now() - timedelta(days=28)).strftime("%m")) + "月延長保証月次請求書.xlsx"
+
     browser.configure(
-        slowmo=300,
-        headless=True
+        headless=False
     )
     open_sompo()
     data_pdf = download_monthly_guarantee()
-    pdf_to_excel(data_pdf, 'output/test.xlsx')
+    pdf_to_excel(data_pdf, resultfile)
 
 def open_sompo():
 

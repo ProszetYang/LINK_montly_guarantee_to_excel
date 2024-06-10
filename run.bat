@@ -1,0 +1,1 @@
+rcc run -e "\\192.168.0.178\contents\WinActor\robocorp\conf\env.json" --robot "robot.yaml"
